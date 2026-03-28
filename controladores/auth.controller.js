@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
-  const { nombre, email, password, businessName } = req.body;
+  const { nombre, email, password, businessName, avatar } = req.body;
   if (!nombre || !email || !password || !businessName) {
     return res.json({ mensaje: 'Datos incompletos' });
   }
@@ -20,7 +20,8 @@ const register = async (req, res) => {
       nombre,
       email,
       password: hashedPassword,
-      businessName
+      businessName,
+      avatar
     });
     
     const slug = businessName
