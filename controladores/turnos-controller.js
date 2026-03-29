@@ -5,7 +5,7 @@ const generarSlots = require('../utils/generarSlots');
 
 const turnosDisponibles = async (req, res) => {
   try {
-    const { empresaId, fecha } = req.query;
+    const { empresaId, fecha } = req.params;
 
     const empresa = await Empresa.findById(empresaId);
     if (!empresa) {
