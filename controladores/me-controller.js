@@ -13,8 +13,10 @@ const me = async (req, res) => {
 
 const public = async (req, res) => {
   const emp = await Business.findOne({ slug: req.params.slug });
-  if (!emp) return res.status(404).json({ msg: 'Not found' });
-
+  if (!emp) return res.json({
+    error: true,
+    mensaje: 'Not found' 
+  });
   res.json({
     emp
   });

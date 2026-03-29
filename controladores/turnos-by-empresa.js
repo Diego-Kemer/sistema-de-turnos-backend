@@ -13,7 +13,8 @@ const obtenerTurnosPorEmpresa = async (req, res) => {
   } catch (error) {
 
     res.status(500).json({
-      mensaje: "Error al obtener turnos"
+      mensaje: "Error al obtener turnos",
+      error
     });
 
   }

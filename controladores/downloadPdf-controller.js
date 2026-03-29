@@ -7,7 +7,10 @@ const generarComprobante = async (req, res) => {
 
     const turno = await Turno.findById(req.params.id);
     if (!turno) {
-      return res.status(404).json({ mensaje: "Turno no encontrado" });
+      return res.json({ 
+        error: true,
+        mensaje: "Turno no encontrado" 
+      });
     }
 
     const empresa = await Empresa.findById(turno.empresaId);
@@ -98,8 +101,10 @@ const generarComprobante = async (req, res) => {
     doc.end();
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensaje: "Error generando comprobante" });
+    res.status(500).json({ 
+      mensaje: "Error generando comprobante",
+      error
+    });
   }
 };
 

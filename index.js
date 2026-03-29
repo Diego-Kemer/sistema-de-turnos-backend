@@ -19,15 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 // Conexión a MongoDB Atlas
 connectDB();
 
-// Rutas básicas
-// app.get('/', (req, res) => {
-//     res.json({ mensaje: 'Servidor funcionando' });
-// });
-app.use('/', auth);
-app.use('/api', empresas);
-app.use('/api', turnos);
-app.use('/editDH', diasHoarios);
-app.use('/clientes', clientes)
+app.use('/api/auth', auth);
+app.use('/api/empresa', empresas);
+app.use('/api/turnos', turnos);
+app.use('/api/dias-horarios', diasHoarios);
+app.use('/api/clientes', clientes)
 
 // Puerto
 const PORT = process.env.PORT || 5000;

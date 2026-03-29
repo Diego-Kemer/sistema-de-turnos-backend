@@ -8,7 +8,10 @@ const diasHabiles = async (req, res)=>{
         const empresa = await Empresas.findOne({_id: id})
 
         if (!empresa) {
-            return res.status(404).json({ message: 'Empresa no encontrada' });
+            return res.json({ 
+              error: true,
+              mensaje: 'Empresa no encontrada' 
+            });
         }
 
         dias.forEach(dia => {
@@ -32,7 +35,7 @@ const diasHabiles = async (req, res)=>{
         })
     } catch (error) {
         res.json({ 
-            message: 'Error al actualizar días hábiles',
+            mensaje: 'Error al actualizar días hábiles',
             error
          });
     }
@@ -61,7 +64,7 @@ const agregarRango = async (req, res) => {
     const empresa = await Empresas.findById(id);
     if (!empresa) {
       return res.json({ 
-        message: 'Empresa no encontrada',
+        mensaje: 'Empresa no encontrada',
         error: true
     });
     }
@@ -122,13 +125,6 @@ const eliminarRango = async (req, res) => {
         error: true 
     });
     }
-
-    // if (!dia.rangos.rangoId) {
-    //   return res.json({ 
-    //     mensaje: 'Rango inexistente', 
-    //     error: true 
-    // });
-    // }
 
     await Empresas.findOneAndUpdate(
       { _id: id, 'diasHabiles.diaSemana': Number(diaSemana) },

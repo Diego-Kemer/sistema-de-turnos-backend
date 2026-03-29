@@ -36,9 +36,7 @@ const turnosDisponibles = async (req, res) => {
 
     const ocupados = turnosTomados.map(t => t.hora);
 
-    // const disponibles = slots.filter(
-    //   s => !ocupados.includes(s) 
-    // );
+    
     const disponibles = []
     slots.forEach(s=>{
       if(ocupados.includes(s)){
@@ -48,11 +46,14 @@ const turnosDisponibles = async (req, res) => {
       }
       disponibles.push(d)
     })
-    console.log(disponibles)
+    
     res.json(disponibles);
 
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ 
+      mensaje: "Error al obtener turnos disponibles",
+      error
+    });
   }
 };
 
@@ -74,7 +75,7 @@ const horaEnRangos = (hora, rangos) => {
 ////////////////////////////
 
 const crearTurno = async (req, res) => {
-  console.log(req.body)
+  
   try {
     const {
       empresaId,
@@ -87,14 +88,16 @@ const crearTurno = async (req, res) => {
     } = req.body;
 
     if (!empresaId || !fecha || !hora || !nombre || !telefono) {
-      return res.status(400).json({
+      return res.json({
+        error: true,
         mensaje: 'Datos incompletos'
       });
     }
 
     const empresa = await Empresa.findById(empresaId);
     if (!empresa) {
-      return res.status(404).json({
+      return res.json({
+        error: true,
         mensaje: 'Empresa no encontrada'
       });
     }
@@ -108,13 +111,15 @@ const crearTurno = async (req, res) => {
 
 
     if (!dia || !dia.habilitado) {
-      return res.status(400).json({
+      return res.json({
+        error: true,
         mensaje: 'Día no disponible'
       });
     }
 
     if (!horaEnRangos(hora, dia.rangos)) {
-      return res.status(400).json({
+      return res.json({
+        error: true,
         mensaje: 'Horario inválido'
       });
     }
@@ -127,7 +132,8 @@ const crearTurno = async (req, res) => {
     });
 
     if (ocupado) {
-      return res.status(400).json({
+      return res.json({
+        error: true,
         mensaje: 'Horario ya reservado'
       });
     }
@@ -169,7 +175,7 @@ const crearTurno = async (req, res) => {
 
   } catch (error) {
     if (error.code === 11000) {
-      return res.status(400).json({
+      return res.json({
         mensaje: 'Horario ya reservado',
         error
       });
@@ -190,12 +196,15 @@ const obtenerTurnoPorId = async (req, res) => {
 
     const turno = await Turno.findById(id);
     if (!turno) {
-      return res.status(404).json({ mensaje: 'Turno no encontrado' });
+      return res.json({ 
+        error: true,
+        mensaje: 'Turno no encontrado' 
+      });
     }
 
     const empresa = await Empresa.findById(turno.empresaId);
 
-    res.status(200).json({
+    res.json({
       _id: turno._id,
       fecha: turno.fecha,
       hora: turno.hora,
@@ -207,7 +216,10 @@ const obtenerTurnoPorId = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: 'Error obteniendo turno' });
+    res.status(500).json({ 
+      mensaje: 'Error obteniendo turno',
+      error 
+    });
   }
 };
 

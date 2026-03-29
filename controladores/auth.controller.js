@@ -6,12 +6,18 @@ const jwt = require('jsonwebtoken');
 const register = async (req, res) => {
   const { nombre, email, password, businessName, avatar } = req.body;
   if (!nombre || !email || !password || !businessName) {
-    return res.json({ mensaje: 'Datos incompletos' });
+    return res.json({ 
+      error: true,
+      mensaje: 'Datos incompletos' 
+    });
   }
   try {
     const exists = await User.findOne({ email });
     if (exists) {
-      return res.status(400).json({ message: 'El email ya está registrado' });
+      return res.json({ 
+        error: true,
+        message: 'El email ya está registrado' 
+      });
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -36,14 +42,7 @@ const register = async (req, res) => {
       owner: user._id,
       slug
     })
-  //   empresa.diasHabiles = Array.from({ length: 7 }, (_, i) => ({
-  //   diaSemana: i,
-  //   habilitado: !(i === 0 || i === 6),
-  //   rangos: [
-  //     { desde: "09:00", hasta: "12:00" },
-  //     { desde: "15:00", hasta: "18:00" }
-  //   ]
-  // }));
+ 
 
   await empresa.save();
 
@@ -68,14 +67,16 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ 
+      return res.json({ 
+        error: true,
         mensaje: 'El email ingresado no está registrado' 
       });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ 
+      return res.json({ 
+        error: true,
         mensaje: 'La contraseña ingresada es incorrecta' 
       });
     }

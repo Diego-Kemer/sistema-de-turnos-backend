@@ -7,7 +7,10 @@ getClientes = async (req, res)=>{
         const clientes = await Clientes.find({empresaId}) 
 
         if(!clientes){
-            return res.json({mensaje: "Aún no tienes clientes"})
+            return res.json({
+                error: true,
+                mensaje: "Aún no tienes clientes"
+            })
         }
         res.json({
             error: false,
