@@ -18,6 +18,11 @@ const turnoSchema = new mongoose.Schema(
       type: String, // "10:30"
       required: true
     },
+    duracion: {
+      type: Number, // Duración en minutos
+      required: true,
+      default: 30
+    },
     telefono: {
       type: String,
       required: true
