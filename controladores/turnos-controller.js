@@ -1,7 +1,9 @@
 const Empresa = require('../modelos/Empresa');
 const Turno = require('../modelos/Turno');
 const Cliente = require('../modelos/Cliente')
+const Notificacion = require('../modelos/Notificación');
 const generarSlots = require('../utils/generarSlots');
+const { enviarPushPorEmpresa } = require('./push-notificacion.controller');
 
 const turnosDisponibles = async (req, res) => {
   try {
@@ -167,7 +169,14 @@ const crearTurno = async (req, res) => {
         new: true
       }
     )
-
+    
+    await Notificacion.create({
+      empresaId,
+      titulo: 'Nuevo turno',
+      mensaje: `${turno.nombre} reservó a las ${turno.hora}`
+    });
+    await enviarPushPorEmpresa(empresaId, turno)
+    
     res.json({
       mensaje: 'Turno creado',
       turno
